@@ -1,0 +1,139 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+header {
+    background-color: #569644;
+    padding: 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav h1 {
+    font-size: 24px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+main {
+    display: flex;
+    max-width: 1200px;
+    margin: 40px auto;
+    gap: 20px;
+}
+
+.profile-sidebar {
+    background-color: #F0F5F1;
+    padding: 20px;
+    width: 30%;
+    height: fit-content;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 20%;
+}
+
+.profile-sidebar img {
+    width: 100px;
+    border-radius: 50%;
+    display: block;
+    margin:12px auto;
+}
+
+.profile-sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.profile-sidebar p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.profile-sidebar h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.profile-sidebar ul {
+    list-style: none;
+}
+
+.profile-sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.profile-sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.social-media {
+    margin-top: 20px;
+}
+
+.social-media a {
+    text-decoration: none;
+    margin-right: 10px;
+    color: #333;
+}
+
+.posts {
+    width: 70%;
+}
+
+article {
+    background-color: #F0F5F1;
+    display: flex;
+    margin-bottom: 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    border-radius: 5% 15% 25% 19%;
+}
+
+article img {
+    width: 30%;
+    object-fit: cover;
+}
+
+.post-info {
+    padding: 20px;
+    width: 70%;
+}
+
+.post-info h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.post-info p {
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.post-info a {
+    color: #007bff;
+    text-decoration: none;
+}
