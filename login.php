@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Consulta para verificar el usuario y la contraseña
 
-    $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario_red' AND contrasenia = '$clave'";
+    $sql = "SELECT * FROM usuarios WHERE `user_name` = '$usuario_red' AND `pass_word` = '$clave'";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -21,10 +21,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
 
         $row = $result->fetch_assoc();
-        $tipo_usuario = $row['tipo_usuario'];
+        $tipo_usuario = $row['rol'];
         redirigir_usuario($tipo_usuario);
         
-    } else {
+    }
+    $sql = "SELECT * FROM vigilantes WHERE `user_name` = '$usuario_red' AND `pass_word` = '$clave'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+
+        $row = $result->fetch_assoc();
+        $tipo_usuario = $row['rol'];
+        redirigir_usuario($tipo_usuario);
+        
+    }
+    else {
         // Login fallido
         echo "Usuario o contraseña incorrectos.";
     }

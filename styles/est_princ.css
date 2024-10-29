@@ -5,54 +5,81 @@
     font-family: Arial, sans-serif;
 }
 
+.layout{
+    display: grid;
+    gap: 4px;
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+    'header' 'sidebar' 'main' 'footer';
+    height: 100vh;
+}
+
+@media (min-width: 480px){
+    .layout{
+        display: grid;
+        grid-template-columns: 160px auto auto;
+        grid-template-areas: 
+        'header header header'
+        'sidebar main main'
+        'footer footer footer';
+    }
+}
+
 body {
     background-color: #f5f5f5;
 }
 
 header {
+    grid-area: header;
     background-color: #569644;
     padding: 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 nav {
+    grid-area: header;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 nav h1 {
+    grid-area: header;
     font-size: 24px;
 }
 
 nav ul {
+    grid-area: header;
     list-style: none;
     display: flex;
 }
 
 nav ul li {
+    grid-area: header;
     margin-left: 20px;
 }
 
 nav ul li a {
+    grid-area: header;
     text-decoration: none;
     color: #333;
 }
 
 main {
+    grid-area: main;
     display: flex;
     max-width: 1200px;
-    margin: 40px auto;
     gap: 20px;
+    justify-content: center;
 }
 
 .profile-sidebar {
+    grid-area: sidebar;
     background-color: #F0F5F1;
     padding: 20px;
-    width: 30%;
     height: fit-content;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-    border-radius: 20%;
+    margin: 10px;
 }
 
 .profile-sidebar img {
@@ -81,6 +108,10 @@ main {
     list-style: none;
 }
 
+.profile-sidebar button {
+    background-color: #569644;
+}
+
 .profile-sidebar ul li {
     margin-bottom: 10px;
 }
@@ -101,39 +132,49 @@ main {
 }
 
 .posts {
-    width: 70%;
+    grid-area: main;
+    margin: 10px;
 }
 
 article {
+    grid-area: main;
     background-color: #F0F5F1;
     display: flex;
     margin-bottom: 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
     overflow: hidden;
-    border-radius: 5% 15% 25% 19%;
 }
 
 article img {
+    grid-area: main;
     width: 30%;
     object-fit: cover;
 }
 
 .post-info {
+    grid-area: main;
     padding: 20px;
     width: 70%;
 }
 
 .post-info h2 {
+    grid-area: main;
     font-size: 18px;
     margin-bottom: 10px;
 }
 
 .post-info p {
+    grid-area: main;
     color: #777;
     margin-bottom: 10px;
 }
 
 .post-info a {
+    grid-area: main;
     color: #007bff;
     text-decoration: none;
+}
+
+footer{
+    grid-area: footer;
 }
