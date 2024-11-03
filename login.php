@@ -25,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['usuario_id'] = $row['referencia_usuario'];
         $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
         $_SESSION['primer_apellido'] = $row['primer_apellido'];
+        $_SESSION['type_user'] = $row['rol'];
         redirigir_usuario($tipo_usuario);
         
     }
@@ -41,7 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //Guardar variables del usuario en la sesión
         $_SESSION['usuario_id'] = $row['referencia_usuario'];
-        $_SESSION['nombre_usuario'] = $row['primer_Nombre' + ' ' +'primer_apellido'];
+        $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
+        $_SESSION['apellido_usario'] = $row['primer_apellido'];
+        $_SESSION['type_user'] = $row['rol'];
         redirigir_usuario($tipo_usuario);
         
     }

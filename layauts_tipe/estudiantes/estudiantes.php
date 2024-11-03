@@ -4,6 +4,11 @@ session_start();
 if(!isset($_SESSION['usuario_id'])){
     header("Location: /Proyecto_Grado");
 }
+
+if($_SESSION["type_user"] != "2"){
+    header("location: /localhost/Proyecto_Grado");
+}
+
 ?>
 
 <!DOCTYPE html>
