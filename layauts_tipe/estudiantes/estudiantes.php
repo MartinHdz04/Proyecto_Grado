@@ -1,10 +1,18 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['usuario_id'])){
+    header("Location: /Proyecto_Grado");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost & Found</title>
-    <link rel="stylesheet" href="../styles/est_princ.css">
+    <link rel="stylesheet" href="../../styles/est_princ.css">
 </head>
 <body>
     <div class="layout">
@@ -12,14 +20,18 @@
             <nav>
                 <h1>Lost & Found EAN</h1>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Objetos reclamados</a></li>
+                    <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
+                    <?php
+
+                    ?>
                 </ul>
+
             </nav>
         </header>
             <section class="profile-sidebar">
-                <img src="../static/imgstest/One-Caveman-Selfie.png" alt="Profile Picture">
+                <img src="../../static/imgstest/One-Caveman-Selfie.png" alt="Profile Picture">
                 <h2>(Username)</h2>
                 <p>(Información acerca del usuario, como su carrera edad, telefono, etc...):</h3>
                 <ul>
@@ -27,7 +39,13 @@
                     <li><a href="#">(Ejemplo de reporte: L918 - Saco gris)</a></li>
                 </ul>
                 <div class="social-media">
-                    <button>Reportar</button>
+                <button id="btn_reportar_est">Reportar</button>
+                    <script>
+                        document.getElementById("btn_reportar_est").onclick = function(){
+                            location.href = "reportar_estudiantes.php";
+                        };
+                    </script>
+                    
                 </div>
             </section>
             <main>

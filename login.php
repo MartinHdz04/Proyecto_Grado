@@ -1,10 +1,9 @@
 <?php
 
-
 // Incluir archivo de conexión
 include 'conexion.php';
 
-
+session_start();
 
 // Verificar datos de login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -22,6 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $row = $result->fetch_assoc();
         $tipo_usuario = $row['rol'];
+
+        $_SESSION['usuario_id'] = $row['referencia_usuario'];
+        $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
+        $_SESSION['primer_apellido'] = $row['primer_apellido'];
         redirigir_usuario($tipo_usuario);
         
     }
@@ -32,8 +35,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
 
+        //Obtener datos del sql relacionados al usuario obtenido
         $row = $result->fetch_assoc();
         $tipo_usuario = $row['rol'];
+
+        //Guardar variables del usuario en la sesión
+        $_SESSION['usuario_id'] = $row['referencia_usuario'];
+        $_SESSION['nombre_usuario'] = $row['primer_Nombre' + ' ' +'primer_apellido'];
         redirigir_usuario($tipo_usuario);
         
     }
@@ -52,13 +60,13 @@ $conn->close();
 function redirigir_usuario($tipo_usuario) {
     switch ($tipo_usuario) {
         case 1:
-            header("Location: layauts_tipe/estudiantes.php");
+            header("Location: layauts_tipe/estudiantes/estudiantes.php");
             break;
         case 2:
-            header("Location: layauts_tipe/vigilantes.php");
+            header("Location: layauts_tipe/vigilantes/vigilantes.php");
             break;
         case 3:
-            header("Location: layauts_tipe/admin.php");
+            header("Location: layauts_tipe/admin/admin.php");
             break;
         default:
             echo "Tipo de usuario no válido.";
