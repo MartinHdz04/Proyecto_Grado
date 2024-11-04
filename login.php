@@ -6,7 +6,7 @@ include 'conexion.php';
 session_start();
 if(isset($_SESSION['usuario_id'])){
     redirigir_usuario($_SESSION['type_user']);
-
+    
 }
 
 
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tipo_usuario = $row['rol'];
 
         $_SESSION['usuario_id'] = $row['id_usuario'];
-        $_SESSION['nombre_usuario'] = $row['primer_Nombre'] + " " + "";
+        $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
         $_SESSION['primer_apellido'] = $row['primer_apellido'];
         $_SESSION['type_user'] = $row['rol'];
         redirigir_usuario($tipo_usuario);
