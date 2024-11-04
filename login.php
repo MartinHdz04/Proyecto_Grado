@@ -86,4 +86,3 @@ function redirigir_usuario($tipo_usuario) {
 }
 
 ?>
-
