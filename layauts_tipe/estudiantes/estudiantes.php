@@ -4,7 +4,12 @@ session_start();
 if(!isset($_SESSION['usuario_id'])){
     header("Location: /Proyecto_Grado");
 }
+
+if($_SESSION["type_user"] != "1"){
+    header("location: /Proyecto_Grado/index.php");
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -16,20 +21,7 @@ if(!isset($_SESSION['usuario_id'])){
 </head>
 <body>
     <div class="layout">
-        <header>    
-            <nav>
-                <h1>Lost & Found EAN</h1>
-                <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Objetos reclamados</a></li>
-                    <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
-                    <?php
-
-                    ?>
-                </ul>
-
-            </nav>
-        </header>
+    <?php include '../universal/header.php'?>
             <section class="profile-sidebar">
                 <img src="../../static/imgstest/One-Caveman-Selfie.png" alt="Profile Picture">
                 <h2>(Username)</h2>

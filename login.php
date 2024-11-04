@@ -5,52 +5,61 @@ include 'conexion.php';
 
 session_start();
 
+// Si ya hay una sesión activa, redirigir según el tipo de usuario
+if (isset($_SESSION['usuario_id'])) {
+    redirigir_usuario($_SESSION['type_user']);
+}
+
 // Verificar datos de login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario_red = $_POST['usuario_red'];
     $clave = $_POST['clave'];
+    $usuario_encontrado = false;
 
-    // Consulta para verificar el usuario y la contraseña
-
-    $sql = "SELECT * FROM usuarios WHERE `user_name` = '$usuario_red' AND `pass_word` = '$clave'";
+    // Primera consulta: verificar en la tabla `usuarios`
+    $sql = "SELECT * FROM usuarios WHERE `user_name` = ? AND `pass_word` = ?";
     $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $usuario_red, $clave);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-
         $row = $result->fetch_assoc();
-        $tipo_usuario = $row['rol'];
-
-        $_SESSION['usuario_id'] = $row['referencia_usuario'];
+        $_SESSION['usuario_id'] = $row['id_usuario'];
         $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
         $_SESSION['primer_apellido'] = $row['primer_apellido'];
-        redirigir_usuario($tipo_usuario);
-        
-    }
-    $sql = "SELECT * FROM vigilantes WHERE `user_name` = '$usuario_red' AND `pass_word` = '$clave'";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-
-        //Obtener datos del sql relacionados al usuario obtenido
-        $row = $result->fetch_assoc();
+        $_SESSION['type_user'] = $row['rol'];
+        $usuario_encontrado = true;
         $tipo_usuario = $row['rol'];
-
-        //Guardar variables del usuario en la sesión
-        $_SESSION['usuario_id'] = $row['referencia_usuario'];
-        $_SESSION['nombre_usuario'] = $row['primer_Nombre' + ' ' +'primer_apellido'];
-        redirigir_usuario($tipo_usuario);
-        
     }
-    else {
-        // Login fallido
+    $stmt->close();
+
+    // Segunda consulta: verificar en la tabla `vigilantes` solo si no se encontró en `usuarios`
+    if (!$usuario_encontrado) {
+        $sql = "SELECT * FROM vigilantes WHERE `user_name` = ? AND `pass_word` = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $usuario_red, $clave);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $_SESSION['usuario_id'] = $row['id_vigilante'];
+            $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
+            $_SESSION['primer_apellido'] = $row['primer_apellido'];
+            $_SESSION['type_user'] = $row['rol'];
+            $tipo_usuario = $row['rol'];
+            $usuario_encontrado = true;
+        }
+        $stmt->close();
+    }
+
+    // Redirigir según el tipo de usuario si fue encontrado
+    if ($usuario_encontrado) {
+        redirigir_usuario($tipo_usuario);
+    } else {
         echo "Usuario o contraseña incorrectos.";
     }
-
-    $stmt->close();
 }
 
 // Cerrar conexión
@@ -74,6 +83,4 @@ function redirigir_usuario($tipo_usuario) {
     }
     exit();
 }
-
 ?>
-

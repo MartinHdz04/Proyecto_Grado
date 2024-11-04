@@ -1,16 +1,20 @@
 <?php
-
 session_start();
 
 //Comprueba si hay sesión iniciada
 if(!isset($_SESSION['usuario_id'])){
-  header("Location: /Proyecto_Grado");
+    header("Location: /Proyecto_Grado");
 }
 
-if($_SESSION["type_user"] != "1"){
-  header("location: /Proyecto_Grado/index.php");
+if($_SESSION["type_user"] != "2"){
+    header("location: /Proyecto_Grado/index.php");
 }
+
+// Verificar si el usuario tiene nombres guardados
+$nombre = isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario'] : '';
+$apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] : '';
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -77,18 +81,22 @@ if($_SESSION["type_user"] != "1"){
 </head>
 
 <body class="body_reportar">
-
-    <?php include '../universal/header.php'?> 
+    <?php include '../universal/header_vig.php'?>
 
     <div class="form-container">
-        <form>
+        <form enctype="multipart/form-data" method="POST" onsubmit="return validateForm()" action="carga_vigilantes.php">
+            <div class="form-group">
+                <label for="product-image">Fotografía del Producto*</label>
+                <input type="file" id="product-image" name="product-image" accept="image/*">
+            </div>
+
             <div class="form-group">
                 <label for="report-time">Hora del Reporte</label>
-                <input type="datetime-local" id="report-time" name="report-time" disabled>
+                <input type="datetime-local" id="report-time" name="report-time" disabled required>
             </div>
 
             <select id="report-location" name="report-location" required>
-            <option value="" disabled selected>Seleccione un lugar *</option>
+                <option value="" disabled selected>Seleccione un lugar *</option>
                 <option value="Plaza de comidas">Plaza de comidas</option>
                 <option value="Biblioteca">Biblioteca</option>
                 <option value="L04">L04</option>
@@ -111,31 +119,52 @@ if($_SESSION["type_user"] != "1"){
             </select>
 
             <div class="form-group">
+                <br>
+                <label for="name">Nombre del objeto</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
                 <label for="description">Descripción del Objeto</label>
                 <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
 
+            <div class="form-group">
+                <h3>Persona quien recibe:</h3>
+                <br>
+                <label for="nombre_vig">Nombre:</label>
+                <input type="text" id="nombre_vig" name="nombre_vig" value="<?php echo htmlspecialchars($nombre); ?>" required>
+                <label for="apellido_vig">Apellido:</label>
+                <input type="text" id="apellido_vig" name="apellido_vig" value="<?php echo htmlspecialchars($apellido); ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Comentario Vigilante:</label>
+                <textarea id="comment" name="comment" rows="4" required></textarea>
+            </div>
+ 
             <button type="submit">Enviar Reporte</button>
         </form>
     </div>
 </body>
 
 <script>
-        // Función para obtener la fecha y hora actual en formato compatible
-        function setCurrentDateTime() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
+    // Función para obtener la fecha y hora actual en formato compatible
+    function setCurrentDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
 
-            // Formato "YYYY-MM-DDTHH:MM" para el campo datetime-local
-            const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-            document.getElementById('report-time').value = formattedDateTime;
-        }
+        // Formato "YYYY-MM-DDTHH:MM" para el campo datetime-local
+        const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        document.getElementById('report-time').value = formattedDateTime;
+    }
 
-        // Ejecutar la función al cargar la página
-        window.onload = setCurrentDateTime;
-    </script>
+    // Ejecutar la función al cargar la página
+    window.onload = setCurrentDateTime;
+</script>
 
 </html>
