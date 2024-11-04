@@ -4,6 +4,11 @@
 include 'conexion.php';
 
 session_start();
+if(isset($_SESSION['usuario_id'])){
+    redirigir_usuario($_SESSION['type_user']);
+
+}
+
 
 // Verificar datos de login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,11 +24,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
 
+        
+
         $row = $result->fetch_assoc();
         $tipo_usuario = $row['rol'];
 
-        $_SESSION['usuario_id'] = $row['referencia_usuario'];
-        $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
+        $_SESSION['usuario_id'] = $row['id_usuario'];
+        $_SESSION['nombre_usuario'] = $row['primer_Nombre'] + " " + "";
         $_SESSION['primer_apellido'] = $row['primer_apellido'];
         $_SESSION['type_user'] = $row['rol'];
         redirigir_usuario($tipo_usuario);
@@ -41,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tipo_usuario = $row['rol'];
 
         //Guardar variables del usuario en la sesión
-        $_SESSION['usuario_id'] = $row['referencia_usuario'];
+        $_SESSION['usuario_id'] = $row['id_usuario'];
         $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
         $_SESSION['apellido_usario'] = $row['primer_apellido'];
         $_SESSION['type_user'] = $row['rol'];

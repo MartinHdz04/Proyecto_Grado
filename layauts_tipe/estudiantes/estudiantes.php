@@ -5,9 +5,13 @@ if(!isset($_SESSION['usuario_id'])){
     header("Location: /Proyecto_Grado");
 }
 
-if($_SESSION["type_user"] != "2"){
-    header("location: /localhost/Proyecto_Grado");
+if($_SESSION["type_user"] != "1"){
+    header("location: /Proyecto_Grado/index.php");
 }
+
+include '../../conexion.php';
+
+
 
 ?>
 
@@ -25,12 +29,9 @@ if($_SESSION["type_user"] != "2"){
             <nav>
                 <h1>Lost & Found EAN</h1>
                 <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Objetos reclamados</a></li>
+                    <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
+                    <li><a href="objetos_abiertos.php">Objetos reclamados</a></li>
                     <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
-                    <?php
-
-                    ?>
                 </ul>
 
             </nav>

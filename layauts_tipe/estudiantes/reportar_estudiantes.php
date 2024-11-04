@@ -1,6 +1,10 @@
 <?php
 
+session_start();
 
+if($_SESSION["type_user"] != "1"){
+  header("location: /Proyecto_Grado/index.php");
+}
 
 ?>
 
@@ -64,6 +68,10 @@
     button:hover {
       background-color: #45a049;
     }
+    .span_descripcion{
+      color: gray;
+      font-weight: 300;
+    }
   </style>
 
 </head>
@@ -73,51 +81,53 @@
         <nav>
             <h1>Lost & Found EAN</h1>
             <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Objetos reclamados</a></li>
-                <li><a href="#">Cerrar Sesión</a></li>
+                <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
+                <li><a href="objetos_abiertos.php">Objetos reclamados</a></li>
+                <li><a href="../universal/logout.php">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="form-container">
-        <form>
-            <div class="form-group">
-                <label for="product-image">Fotografía del Producto</label>
-                <input type="file" id="product-image" name="product-image" accept="image/*">
-            </div>
+        <form action="Reporte_estudiante.php" method="POST" onsubmit="return validateForm()">
 
             <div class="form-group">
-                <label for="report-time">Hora del Reporte</label>
+                <label for="report-time">Hora del Reporte*</label>
                 <input type="datetime-local" id="report-time" name="report-time" disabled>
             </div>
-
-            <select id="report-location" name="report-location" required>
-                    <option value="">Seleccione un lugar</option>
-                    <option value="recepción">Recepción</option>
-                    <option value="biblioteca">Biblioteca</option>
-                    <option value="cafetería">Cafetería</option>
-                    <option value="gimnasio">Gimnasio</option>
-                    <option value="salón de clases">Salón de Clases</option>
-                    <!-- Agregar más opciones según sea necesario -->
-            </select>
-
             <div class="form-group">
-                <label for="name">Nombre</label>
-                <input type="text" id="name" name="name" required>
+              <select id="report-location" name="report-location" required>
+                <option value="" disabled selected>Seleccione un lugar *</option>
+                <option value="Plaza de comidas">Plaza de comidas</option>
+                <option value="Biblioteca">Biblioteca</option>
+                <option value="L04">L04</option>
+                <option value="L06">L06</option>
+                <option value="L01">L01</option>
+                <option value="L02">L02</option>
+                <option value="L03">L03</option>
+                <option value="L05">L05</option>
+                <option value="L07">L07</option>
+                <option value="L08">L08</option>
+                <option value="L09">L09</option>
+                <option value="L10">L10</option>
+                <option value="L10">L10</option>
+                <option value="N01">N01</option>
+                <option value="N02">N02</option>
+                <option value="N03">N03</option>
+                <option value="N04">N04</option>
+                <option value="N05">N05</option>
+                <option value="N06">N06</option>
+                <option value="N07">N07</option>
+              <!-- Agregar más opciones según sea necesario -->
+              </select>
             </div>
 
             <div class="form-group">
-                <label for="description">Descripción del Objeto</label>
-                <textarea id="description" name="description" rows="4" required></textarea>
+                <label for="description">Descripción del Objeto <span class="span_descripcion">--opcional--</span></label>
+                <textarea id="description" name="description" rows="4" ></textarea>
             </div>
 
-            <div class="form-group">
-                <label for="recipient">Persona a quien se le entregó el objeto</label>
-                <input type="text" id="recipient" name="recipient" required>
-            </div>
-
-            <button type="submit">Enviar Reporte</button>
+            <button type="submit">Enviar Reporte (Llamar Vigilante)</button>
         </form>
     </div>
 </body>
