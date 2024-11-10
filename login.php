@@ -10,6 +10,8 @@ if(isset($_SESSION['usuario_id'])){
 }
 
 
+
+
 // Verificar datos de login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario_red = $_POST['usuario_red'];
@@ -43,12 +45,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
 
+        
         //Obtener datos del sql relacionados al usuario obtenido
         $row = $result->fetch_assoc();
         $tipo_usuario = $row['rol'];
 
+        
         //Guardar variables del usuario en la sesión
-        $_SESSION['usuario_id'] = $row['id_usuario'];
+        $_SESSION['usuario_id'] = $row['id_vigilante'];
         $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
         $_SESSION['apellido_usario'] = $row['primer_apellido'];
         $_SESSION['type_user'] = $row['rol'];
@@ -73,6 +77,7 @@ function redirigir_usuario($tipo_usuario) {
             header("Location: layauts_tipe/estudiantes/estudiantes.php");
             break;
         case 2:
+            
             header("Location: layauts_tipe/vigilantes/vigilantes.php");
             break;
         case 3:

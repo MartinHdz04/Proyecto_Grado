@@ -46,6 +46,10 @@ $result_almacenados = $stmt_almacenados->get_result();
     <style>
         body {
             background-color: #f5f5f5;
+            background-color: #f5f5f5;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         main {
             display: flex;
@@ -92,7 +96,7 @@ $result_almacenados = $stmt_almacenados->get_result();
 </head>
 <body>
 
-<?php include '../universal/header.php'?>
+<?php include '../universal/header_vig.php'?>
 <main>
     <section class="posts">
         <h1>Objetos Reportados</h1>
@@ -122,6 +126,10 @@ $result_almacenados = $stmt_almacenados->get_result();
         <?php endwhile; ?>
     </section>
 </main>
+
+<footer>
+            <h2>Lost & Found EAN copy Rigt 2024</h2>
+        </footer>
 </body>
 </html>
 

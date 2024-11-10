@@ -7,7 +7,7 @@ $usuario_id = $_SESSION["usuario_id"];
 include '../../conexion.php';
 
 // Obtener los objetos encontrados de la tabla peticiones
-$sql = "SELECT id_peticion, comentarios_peticion, fecha_creacion, estado_peticion, lugar_peticion FROM peticiones WHERE id_usuario= $usuario_id ORDER BY id_peticion DESC";
+$sql = "SELECT id_peticion, comentarios_peticion, fecha_creacion, lugar_peticion,estado_peticion FROM peticiones WHERE estado_peticion= 'abierto' ORDER BY id_peticion DESC";
 $result = $conn->query($sql);
 
 ?>
@@ -119,19 +119,11 @@ $result = $conn->query($sql);
     </style>
 </head>
 <body class="body_reportar">
-    <header>    
-        <nav>
-            <h1>Lost & Found EAN</h1>
-            <ul>
-                <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
-                <li><a href="objetos_abiertos.php">Objetos reportados</a></li>
-                <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
-                <li><a href="#">Objetos reclamados</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include '../universal/header_vig.php'?>
 
     <main>
+
+    <h2 style="text-align: center;">¡Peticiones Pendientes!</h2>
         <section class="posts">
             <?php if ($result->num_rows > 0): ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
@@ -142,7 +134,7 @@ $result = $conn->query($sql);
                         <p><strong>Descripcion:</strong><?php echo strlen($row['comentarios_peticion']) > 50 ? htmlspecialchars(substr($row['comentarios_peticion'], 0, 50)) . '...' : htmlspecialchars($row['comentarios_peticion']); ?></p>
                         <p><strong>Fecha de creación:</strong> <?php echo htmlspecialchars($row['fecha_creacion']); ?></p>
                         <p><strong>Lugar del Encuentro:</strong> <?php echo htmlspecialchars($row['lugar_peticion']); ?></p>
-                        <a href="detalle_objeto.php?id=<?php echo $row['id_peticion']; ?>">Ver más detalles</a>
+                        <a href="detalle_peticion.php?id=<?php echo $row['id_peticion']; ?>">Ver más detalles</a>
                     </article>
                 <?php endwhile; ?>
             <?php else: ?>

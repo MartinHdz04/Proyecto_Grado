@@ -41,12 +41,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     * {
       box-sizing: border-box;
     }
-    .body-reportar {
-      font-family: Arial, sans-serif;
+
+    html{
+      height: 100%;
+    }
+    .body_reportar {
+      background-color: #f5f5f5;
+      height: 100%;
       display: flex;
-      justify-content: center;
-      height: 100vh; /* Hace que el body ocupe toda la ventana */
-      margin: 0;
+      flex-direction: column;
     }
     .form-container {
       width: 90%;
@@ -94,6 +97,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       color: gray;
       font-weight: 300;
     }
+    @media (max-width: 480px){
+      nav{
+          flex-direction: column;
+        }
+      ul{
+        flex-direction: column;
+        align-items: center;
+      }
+      li{
+        margin-top: 15px;
+      }
+    }
+
   </style>
 
 </head>
@@ -104,8 +120,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h1>Lost & Found EAN</h1>
             <ul>
                 <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
-                <li><a href="objetos_abiertos.php">Objetos reclamados</a></li>
-                <li><a href="../universal/logout.php">Cerrar Sesión</a></li>
+                <li><a href="objetos_abiertos.php">Objetos reportados</a></li>
+                <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
+                <li><a href="#">Objetos reclamados</a></li>
             </ul>
         </nav>
     </header>
@@ -135,6 +152,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <p>Objeto no encontrado</p>
         <?php endif; ?>
     </div>
+    <footer>
+            <h2>Lost & Found EAN copy Rigt 2024</h2>
+        </footer>
 </body>
 
 

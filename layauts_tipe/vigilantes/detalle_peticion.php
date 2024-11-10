@@ -1,20 +1,20 @@
 <?php
+
 session_start();
 
-//Comprueba si hay sesión iniciada
-if(!isset($_SESSION['usuario_id'])){
-    header("Location: /Proyecto_Grado/index.php");
-}
+include '../../conexion.php';
 
 if($_SESSION["type_user"] != "2"){
-    header("location: /Proyecto_Grado/index.php");
+  header("location: /Proyecto_Grado/index.php");
 }
 
-// Verificar si el usuario tiene nombres guardados
-$nombre = isset($_SESSION['nombre_usuario']) ? $_SESSION['nombre_usuario'] : '';
-$apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] : '';
-?>
+$id_peticion = $_GET["id"];
+$sql = "SELECT comentarios_peticion, fecha_creacion, lugar_peticion, id_peticion FROM peticiones WHERE id_peticion= '$id_peticion'";
 
+$result = $conn->query($sql);
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -27,12 +27,15 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
     * {
       box-sizing: border-box;
     }
-    .body-reportar {
-      font-family: Arial, sans-serif;
+
+    html{
+      height: 100%;
+    }
+    .body_reportar {
+      background-color: #f5f5f5;
+      height: 100%;
       display: flex;
-      justify-content: center;
-      height: 100vh; /* Hace que el body ocupe toda la ventana */
-      margin: 0;
+      flex-direction: column;
     }
     .form-container {
       width: 90%;
@@ -66,7 +69,7 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
     button {
       width: 100%;
       padding: 10px;
-      background-color: #4CAF50;
+      background-color: green;
       color: white;
       border: none;
       border-radius: 4px;
@@ -74,16 +77,44 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
       cursor: pointer;
     }
     button:hover {
-      background-color: #45a049;
+      background-color: darkred;
     }
+    .span_descripcion{
+      color: gray;
+      font-weight: 300;
+    }
+    @media (max-width: 480px){
+      nav{
+          flex-direction: column;
+        }
+      ul{
+        flex-direction: column;
+        align-items: center;
+      }
+      li{
+        margin-top: 15px;
+      }
+    }
+
   </style>
 
 </head>
 
 <body class="body_reportar">
-    <?php include '../universal/header_vig.php'?>
+    <header>    
+        <nav>
+            <h1>Lost & Found EAN</h1>
+            <ul>
+                <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
+                <li><a href="objetos_abiertos.php">Objetos reportados</a></li>
+                <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
+                <li><a href="#">Objetos reclamados</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <div class="form-container">
+        <?php if ($result->num_rows > 0): $row = $result->fetch_assoc()?>
         <form enctype="multipart/form-data" method="POST" onsubmit="return validateForm()" action="carga_vigilantes.php">
             <div class="form-group">
                 <label for="product-image">Fotografía del Producto*</label>
@@ -96,7 +127,7 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
             </div>
 
             <select id="report-location" name="report-location" required>
-                <option value="" disabled selected>Seleccione un lugar *</option>
+                <option value="<?php echo htmlspecialchars($row['lugar_peticion']);?>" selected><?php echo htmlspecialchars($row['lugar_peticion']); ?></option>
                 <option value="Plaza de comidas">Plaza de comidas</option>
                 <option value="Biblioteca">Biblioteca</option>
                 <option value="L04">L04</option>
@@ -120,38 +151,43 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
 
             <div class="form-group">
                 <br>
-                <label for="name">Nombre del objeto</label>
+                <label for="name">Nombre del objeto*</label>
                 <input type="text" id="name" name="name" required>
             </div>
 
             <div class="form-group">
                 <label for="description">Descripción del Objeto</label>
-                <textarea id="description" name="description" rows="4" required></textarea>
+                <textarea id="description" name="description" rows="4" required ><?php echo htmlspecialchars($row["comentarios_peticion"]) ?></textarea>
             </div>
 
             <div class="form-group">
-                <h3>Persona quien recibe:</h3>
+                <h3>Persona quien recibe:*</h3>
                 <br>
                 <label for="nombre_vig">Nombre:</label>
-                <input type="text" id="nombre_vig" name="nombre_vig" value="<?php echo htmlspecialchars($nombre); ?>" required>
+                <input type="text" id="nombre_vig" name="nombre_vig" value="<?php echo htmlspecialchars($_SESSION["nombre_usuario"])?>"  required>
                 <label for="apellido_vig">Apellido:</label>
-                <input type="text" id="apellido_vig" name="apellido_vig" value="<?php echo htmlspecialchars($apellido); ?>" required>
+                <input type="text" id="apellido_vig" name="apellido_vig" value="<?php echo htmlspecialchars($_SESSION["primer_apellido"])?>"  required>
             </div>
 
             <div class="form-group">
-                <label for="comment">Comentario Vigilante:</label>
+                <label for="comment">Comentario Vigilante:*</label>
                 <textarea id="comment" name="comment" rows="4" required></textarea>
             </div>
+
+            <input type="hidden" name="peticion_id" id="peticion_id" value="<?php echo $id_peticion?>">
  
             <button type="submit">Enviar Reporte</button>
         </form>
+        <?php else: ?>
+          <p>Objeto no encontrado</p>
+        <?php endif; ?>
     </div>
-
     <footer>
             <h2>Lost & Found EAN copy Rigt 2024</h2>
         </footer>
-
 </body>
+
+
 
 <script>
     // Función para obtener la fecha y hora actual en formato compatible
@@ -173,3 +209,5 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
 </script>
 
 </html>
+
+<?php   $stmt->close(); ?>

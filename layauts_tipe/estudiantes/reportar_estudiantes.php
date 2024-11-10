@@ -19,10 +19,17 @@ if($_SESSION["type_user"] != "1"){
     * {
       box-sizing: border-box;
     }
-    .body-reportar {
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    .body_reportar {
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      /*justify-content: center;*/
       height: 100vh; /* Hace que el body ocupe toda la ventana */
       margin: 0;
     }
@@ -72,6 +79,18 @@ if($_SESSION["type_user"] != "1"){
       color: gray;
       font-weight: 300;
     }
+    @media (max-width: 480px){
+      nav{
+          flex-direction: column;
+        }
+      ul{
+        flex-direction: column;
+        align-items: center;
+      }
+      li{
+        margin-top: 15px;
+      }
+    }
   </style>
 
 </head>
@@ -82,8 +101,9 @@ if($_SESSION["type_user"] != "1"){
             <h1>Lost & Found EAN</h1>
             <ul>
                 <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
-                <li><a href="objetos_abiertos.php">Objetos reclamados</a></li>
-                <li><a href="../universal/logout.php">Cerrar Sesión</a></li>
+                <li><a href="objetos_abiertos.php">Objetos reportados</a></li>
+                <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
+                <li><a href="#">Objetos reclamados</a></li>
             </ul>
         </nav>
     </header>
@@ -130,6 +150,9 @@ if($_SESSION["type_user"] != "1"){
             <button type="submit">Enviar Reporte (Llamar Vigilante)</button>
         </form>
     </div>
+    <footer>
+            <h2>Lost & Found EAN copy Rigt 2024</h2>
+        </footer>
 </body>
 
 <script>
