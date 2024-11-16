@@ -120,7 +120,6 @@ $result = $conn->query($sql);
 </head>
 <body class="body_reportar">
     <?php include '../universal/header_vig.php'?>
-
     <main>
 
     <h2 style="text-align: center;">¡Peticiones Pendientes!</h2>

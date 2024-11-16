@@ -3,7 +3,7 @@ session_start();
 
 require_once '../../conexion.php'; // Asegúrate de que este archivo conecta a la base de datos y define $conn
 
-if ($_SESSION["type_user"] != "2") {
+if ($_SESSION["type_user"] != "3") {
     header("location: /Proyecto_Grado/index.php");
     exit();
 }
@@ -58,7 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tipoImagen = $_FILES['product-image']['type'];
         $rutaTemporal = $_FILES['product-image']['tmp_name'];
 
-
         // Crear una imagen desde el archivo temporal según su tipo
         switch ($tipoImagen) {
             case 'image/jpeg':
@@ -95,7 +94,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         imagejpeg($imagenRedimensionada); // Crear la imagen en el buffer
         $imagen = ob_get_clean(); // Obtener el contenido del buffer
 
-
         // Liberar memoria
         imagedestroy($imagenOriginal);
         imagedestroy($imagenRedimensionada);
@@ -118,9 +116,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    
     // Vincular parámetros (s para string, i para integer, b para blob)
-    $stmt->bind_param("ssssssssb", $referencia_unica, $hora_reporte, $estado_reporte, $nombre_objeto, $descripcion_objeto, $lugar_reporte, $vigilante_id, $comentario, $imagen);
+    $stmt->bind_param("sssssissb", $referencia_unica, $hora_reporte, $estado_reporte, $nombre_objeto, $descripcion_objeto, $lugar_reporte, $vigilante_id, $comentario, $imagen);
 
     // Enviar la imagen como datos largos (BLOB)
     $stmt->send_long_data(8, $imagen);
@@ -146,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Redirigir a la página de reportes
-    header("Location: obj_rep_vig.php");
+    header("Location: obj_rep_admin.php");
     exit();
 
     $stmt->close();

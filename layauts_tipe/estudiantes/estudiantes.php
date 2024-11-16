@@ -94,7 +94,7 @@ if($result->num_rows > 0){
             <?php if ($foto_perfil): ?>
                 <img src="data:image/png;base64,<?php echo base64_encode($foto_perfil); ?>" alt="Profile Picture">
             <?php else: ?>
-                <img src="../../static/imgstest/One-Caveman-Selfie.png" alt="Profile Picture">
+                <img src="../../static/imgstest/imagen_no_disponible.png" alt="Profile Picture">
             <?php endif; ?>
             <h2><?php echo strtoupper($nombre_usuario); ?></h2>
             <p> NOMBRE: <?php echo strtoupper(htmlspecialchars($user['primer_nombre']) . " " . htmlspecialchars($user['primer_apellido'])) ?></p>

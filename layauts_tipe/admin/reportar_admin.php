@@ -6,7 +6,7 @@ if(!isset($_SESSION['usuario_id'])){
     header("Location: /Proyecto_Grado/index.php");
 }
 
-if($_SESSION["type_user"] != "2"){
+if($_SESSION["type_user"] != "3"){
     header("location: /Proyecto_Grado/index.php");
 }
 
@@ -81,10 +81,10 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
 </head>
 
 <body class="body_reportar">
-  <?php include '../universal/header_vig.php'?>
+  <?php include '../universal/header_admin.php'?>
 
     <div class="form-container">
-        <form enctype="multipart/form-data" method="POST" onsubmit="return validateForm()" action="carga_vigilantes.php">
+        <form enctype="multipart/form-data" method="POST" onsubmit="return validateForm()" action="carga_admin.php">
             <div class="form-group">
                 <label for="product-image">Fotografía del Producto*</label>
                 <input type="file" id="product-image" name="product-image" accept="image/*">

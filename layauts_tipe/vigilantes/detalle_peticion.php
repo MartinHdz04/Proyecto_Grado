@@ -101,17 +101,7 @@ $result = $conn->query($sql);
 </head>
 
 <body class="body_reportar">
-    <header>    
-        <nav>
-            <h1>Lost & Found EAN</h1>
-            <ul>
-                <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
-                <li><a href="objetos_abiertos.php">Objetos reportados</a></li>
-                <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
-                <li><a href="#">Objetos reclamados</a></li>
-            </ul>
-        </nav>
-    </header>
+    <?php include '../universal/header_vig.php'?>
 
     <div class="form-container">
         <?php if ($result->num_rows > 0): $row = $result->fetch_assoc()?>
