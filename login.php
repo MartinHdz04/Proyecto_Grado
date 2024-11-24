@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tipo_usuario = $row['rol'];
 
         $_SESSION['usuario_id'] = $row['id_usuario'];
-        $_SESSION['referencia_user'] = $row['refrencia_usuario'];
+        $_SESSION['referencia_user'] = $row['referencia_usuario'];
         $_SESSION['nombre_usuario'] = $row['primer_Nombre'];
         $_SESSION['primer_apellido'] = $row['primer_apellido'];
         $_SESSION['type_user'] = $row['rol'];

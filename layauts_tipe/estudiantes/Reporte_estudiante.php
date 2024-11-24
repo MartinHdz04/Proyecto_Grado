@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 // Incluir archivo de conexión
@@ -23,6 +27,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($stmt->execute()) {
+        // Enviar la notificación al servidor Node.js mediante CURL
+
+        // Datos que se enviarán como notificación
+        $data = array('mensaje' => 'Nuevo reporte realizado por el estudiante', 'hora' => date('H:i:s'), 'lugar' => $_POST['report-location']);
+        $data_string = json_encode($data);
+
+        // Inicializa cURL para enviar una solicitud POST al servidor WebSocket
+        $ch = curl_init('http://localhost:3000/notificar');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_string))
+        );
+
+        $result = curl_exec($ch);
+
+        // Comprobar si hay errores en cURL
+        if (curl_errno($ch)) {
+            echo 'Error en cURL: ' . curl_error($ch);
+            exit;
+        } else {
+            echo 'Respuesta desde server.js: ' . $result;
+        }
+
+        curl_close($ch);
+
         echo "<script>alert('Reporte enviado exitosamente.'); window.location.href='objetos_abiertos.php';</script>";
     } else {
         throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
@@ -38,6 +70,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 
+echo "hola";
+exit;
 
 
 

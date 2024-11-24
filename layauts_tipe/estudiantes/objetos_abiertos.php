@@ -125,8 +125,9 @@ $result = $conn->query($sql);
             <ul>
                 <li><a href="/Proyecto_Grado/index.php">Inicio</a></li>
                 <li><a href="objetos_abiertos.php">Objetos reportados</a></li>
+                <li><a href="objetos_entregados.php">Objetos reclamados</a></li>
                 <li><a href="../universal/logout.php">Cerrar Sesion</a></li>
-                <li><a href="#">Objetos reclamados</a></li>
+                
             </ul>
         </nav>
     </header>

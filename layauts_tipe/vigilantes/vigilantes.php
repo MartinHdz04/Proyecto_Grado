@@ -76,6 +76,16 @@ if($result->num_rows > 0){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost & Found</title>
     <link rel="stylesheet" href="../../styles/est_princ.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://localhost:3000');
+
+        socket.on('notificacion', function(data) {
+            // Aquí puedes mostrar la notificación en la interfaz de usuario
+            alert(data.mensaje + ' a las ' + data.hora + 'en el lugar: '+ data.lugar);
+        });
+    </script>
+
 </head>
 <body>
     <div class="layout">
