@@ -146,8 +146,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: obj_rep_admin.php");
     exit();
 
-    $stmt->close();
+    
 }
-
+$stmt->close();
 $conn->close();
 ?>

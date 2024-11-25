@@ -19,6 +19,15 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Objetos Abiertos</title>
     <link rel="stylesheet" href="../../styles/est_princ.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://localhost:3000');
+
+        socket.on('notificacion', function(data) {
+            // Aquí puedes mostrar la notificación en la interfaz de usuario
+            alert(data.mensaje + ' a las ' + data.hora + 'en el lugar: '+ data.lugar);
+        });
+    </script>
     <style>
         .posts {
             width: 100%;
@@ -133,6 +142,7 @@ $result = $conn->query($sql);
                         <p><strong>Descripcion:</strong><?php echo strlen($row['comentarios_peticion']) > 50 ? htmlspecialchars(substr($row['comentarios_peticion'], 0, 50)) . '...' : htmlspecialchars($row['comentarios_peticion']); ?></p>
                         <p><strong>Fecha de creación:</strong> <?php echo htmlspecialchars($row['fecha_creacion']); ?></p>
                         <p><strong>Lugar del Encuentro:</strong> <?php echo htmlspecialchars($row['lugar_peticion']); ?></p>
+                        <p><strong>Id de la petición:</strong> <?php echo htmlspecialchars($row['id_peticion']); ?></p>
                         <a href="detalle_peticion.php?id=<?php echo $row['id_peticion']; ?>">Ver más detalles</a>
                     </article>
                 <?php endwhile; ?>

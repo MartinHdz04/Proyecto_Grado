@@ -203,6 +203,12 @@ if ($stmt) {
         .filter-form button:hover {
             background-color: #569656;
         }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
         /* Responsive design */
         @media (max-width: 600px) {
@@ -225,6 +231,15 @@ if ($stmt) {
                     font-size: 14px;
                 }
             }
+
+            .resultados div{
+            margin: 5px;
+            padding: 5px;
+            text-align: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+
+            }
     </style>
 </head>
 <body>
@@ -233,24 +248,60 @@ if ($stmt) {
         <section class="profile-sidebar">
             <div class="filter-form">
                 <h1>Buscar Peticiones</h1>
-                <form method="GET" action="peticion.php">
+                <form method="GET" action="peticiones_admin.php">
                     <label>Fecha de Reporte (Inicio):</label>
                     <input type="date" name="fecha_inicio" value="<?= htmlspecialchars($filters['fecha_inicio']) ?>">
 
                     <label>Fecha de Reporte (Fin):</label>
                     <input type="date" name="fecha_fin" value="<?= htmlspecialchars($filters['fecha_fin']) ?>">
 
-                    <label>ID del usuario:</label>
-                    <input type="text" name="id_usuario" value="<?= htmlspecialchars($filters['id_usuario']) ?>">
+                    <label for="busqueda">Cedula Usuario:</label>
+                    <input type="text" placeholder="Buscar..."  name="usuario_cedula" id="busqueda" autocomplete="off">
+                    <div id="resultados" class="resultados"></div>
+
+                    <input type="hidden" name="id_usuario" id="id_usuario" value="">
+
+                    <div class="form-group">
+                        <div id="mensaje-error"></div>
+                    </div>
 
                     <label>ID de la Petición:</label>
                     <input type="text" name="id_peticion" value="<?= htmlspecialchars($filters['id_peticion']) ?>">
 
                     <label>Lugar Encontrado:</label>
-                    <input type="text" name="lugar_peticion" value="<?= htmlspecialchars($filters['lugar_peticion']) ?>">
+                    <select name="lugar_peticion">
+                        <option value="" <?= empty($filters['lugar_peticion']) ? 'selected' : '' ?>>Seleccione un lugar *</option>
+                        <option value="Plaza de comidas" <?= $filters['lugar_peticion'] === "Plaza de comidas" ? 'selected' : '' ?>>Plaza de comidas</option>
+                        <option value="Biblioteca" <?= $filters['lugar_peticion'] === "Biblioteca" ? 'selected' : '' ?>>Biblioteca</option>
+                        <option value="L04" <?= $filters['lugar_peticion'] === "L04" ? 'selected' : '' ?>>L04</option>
+                        <option value="L06" <?= $filters['lugar_peticion'] === "L06" ? 'selected' : '' ?>>L06</option>
+                        <option value="L01" <?= $filters['lugar_peticion'] === "L01" ? 'selected' : '' ?>>L01</option>
+                        <option value="L02" <?= $filters['lugar_peticion'] === "L02" ? 'selected' : '' ?>>L02</option>
+                        <option value="L03" <?= $filters['lugar_peticion'] === "L03" ? 'selected' : '' ?>>L03</option>
+                        <option value="L05" <?= $filters['lugar_peticion'] === "L05" ? 'selected' : '' ?>>L05</option>
+                        <option value="L07" <?= $filters['lugar_peticion'] === "L07" ? 'selected' : '' ?>>L07</option>
+                        <option value="L08" <?= $filters['lugar_peticion'] === "L08" ? 'selected' : '' ?>>L08</option>
+                        <option value="L09" <?= $filters['lugar_peticion'] === "L09" ? 'selected' : '' ?>>L09</option>
+                        <option value="L10" <?= $filters['lugar_peticion'] === "L10" ? 'selected' : '' ?>>L10</option>
+                        <option value="N01" <?= $filters['lugar_peticion'] === "N01" ? 'selected' : '' ?>>N01</option>
+                        <option value="N02" <?= $filters['lugar_peticion'] === "N02" ? 'selected' : '' ?>>N02</option>
+                        <option value="N03" <?= $filters['lugar_peticion'] === "N03" ? 'selected' : '' ?>>N03</option>
+                        <option value="N04" <?= $filters['lugar_peticion'] === "N04" ? 'selected' : '' ?>>N04</option>
+                        <option value="N05" <?= $filters['lugar_peticion'] === "N05" ? 'selected' : '' ?>>N05</option>
+                        <option value="N06" <?= $filters['lugar_peticion'] === "N06" ? 'selected' : '' ?>>N06</option>
+                        <option value="N07" <?= $filters['lugar_peticion'] === "N07" ? 'selected' : '' ?>>N07</option>
+                    </select>
+
 
                     <label>Estado de la peticion:</label>
-                    <input type="text" name="estado_peticion" value="<?= htmlspecialchars($filters['estado_peticion']) ?>">
+                    <select name="estado_peticion">
+                        <option value="" <?= $filters['estado_peticion'] ? 'selected' : ''?>>-</option>
+                        <option value="abierto" <?= $filters['estado_peticion'] === "abierto" ? 'selected' : ''?>>Peticiones abiertas</option>
+                        <option value="cerrado" <?= $filters['estado_peticion'] === "cerrado" ? 'selected' : ''?>>Peticiones cerradas</option>
+                    </select>
+
+                    <br>
+                    <br>
 
                     <button type="submit">Buscar</button>
                 </form>
@@ -270,7 +321,12 @@ if ($stmt) {
                                 <p><strong>Descripcion:</strong><?php echo strlen($row['comentarios_peticion']) > 50 ? htmlspecialchars(substr($row['comentarios_peticion'], 0, 50)) . '...' : htmlspecialchars($row['comentarios_peticion']); ?></p>
                                 <p><strong>Fecha de creación:</strong> <?php echo htmlspecialchars($row['fecha_creacion']); ?></p>
                                 <p><strong>Lugar del Encuentro:</strong> <?php echo htmlspecialchars($row['lugar_peticion']); ?></p>
-                                <a href="detalle_peticion.php?id=<?php echo $row['id_peticion']; ?>">Ver más detalles</a>
+                                <p><strong>Id de la petición:</strong> <?php echo htmlspecialchars($row['id_peticion']); ?></p>
+                                <a href="<?php echo strtolower($row['estado_peticion']) == 'abierto' 
+                                    ? 'detalle_abierto_admin.php?id=' . $row['id_peticion'] 
+                                    : 'detalle_cerrado_admin.php?id=' . $row['id_peticion']; ?>">
+                                    Ver más detalles
+                                </a>
                             </article>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -285,6 +341,54 @@ if ($stmt) {
         </footer>
     </div>    
 </body>
+
+<script>
+
+    // Ejecutar la función al cargar la página
+   // window.onload = setCurrentDateTime;
+
+    
+    // Función para manejar la entrada de texto en el buscador
+    document.getElementById('busqueda').addEventListener('input', function() {
+        let query = this.value;
+
+        console.log(query);
+        // Crear una solicitud AJAX
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', 'buscador_estudiante.php?query=' + encodeURIComponent(query), true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                document.getElementById('resultados').innerHTML = xhr.responseText;
+                let results = document.querySelectorAll('.result');
+
+                // Recorrer todos los resultados y añadir un listener de clic a cada uno
+                results.forEach(function(result) {
+                    result.addEventListener('click', function() {
+                        // Obtener el valor del div que se hizo clic y pegarlo en el input de id "busqueda"
+                        let valorSeleccionado = result.id;
+                        document.getElementById('busqueda').value = valorSeleccionado;
+
+                        // Obtener el valor del atributo data-id del div que se hizo clic
+                        let id = result.dataset.iduser;
+
+                        // Pegar el valor del data-id en el input hidden con id "estudiante_id"
+                        document.getElementById('id_usuario').value = id;
+
+                        // Eliminar todos los divs con la clase "result"
+                        let allResults = document.querySelectorAll('.result');
+                        allResults.forEach(function(div) {
+                            div.remove(); // Remueve cada div del DOM
+                        });
+                    });
+                });
+            }
+        };
+        xhr.send();
+    });
+
+
+</script>
+
 </html>
 
 <?php

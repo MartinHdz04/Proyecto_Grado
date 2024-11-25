@@ -83,15 +83,61 @@ if($result_reportados->num_rows > 0){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost & Found</title>
     <link rel="stylesheet" href="../../styles/est_princ.css">
+    <style>
+        /* Estilo para el modal */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 5px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #d00;
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
     <?php include '../universal/header_admin.php'?>
         <section class="profile-sidebar">
             <?php if ($foto_perfil): ?>
-                <img src="data:image/png;base64,<?php echo base64_encode($foto_perfil); ?>" alt="Profile Picture">
+                <img src="data:image/png;base64,<?php echo base64_encode($foto_perfil); ?>" alt="Profile Picture" class="clickable-image">
             <?php else: ?>
-                <img src="../../static/imgstest/imagen_no_disponible.png" alt="Profile Picture">
+                <img src="../../static/imgstest/imagen_no_disponible.png" alt="Profile Picture" class="clickable-image">
             <?php endif; ?>
             <h2><?php echo strtoupper($nombre_usuario); ?></h2>
             <p> VIGILANTE: <?php echo strtoupper(htmlspecialchars($user['primer_nombre']) . " " . htmlspecialchars($user['primer_apellido'])) ?></p>
@@ -112,7 +158,7 @@ if($result_reportados->num_rows > 0){
                 <?php if (!empty($arrayObjetos)): ?>
                     <?php foreach ($arrayObjetos as $objects): ?>
                         <article>
-                                <img src="data:image/png;base64,<?php echo base64_encode($objects['fotografia']); ?>" alt="Objeto Encontrado">
+                                <img src="data:image/png;base64,<?php echo base64_encode($objects['fotografia']); ?>" alt="Objeto Encontrado" class="clickable-image">
                             <div class="post-info">
                                 <h2><?php echo strtoupper($objects['Nombre']) . " - " . strtoupper($objects['Referencia']); ?></h2>
                                 <p>Fecha del reporte: <?php echo strtoupper($objects['Fecha']) . " | " . strtoupper($objects['lugar']); ?></p>
@@ -125,10 +171,47 @@ if($result_reportados->num_rows > 0){
                 <?php endif; ?>
             </section>
             </main>
+
+            <!-- Modal para mostrar la imagen -->
+            <div id="image-modal" class="modal">
+                <span class="close-modal" id="close-modal">&times;</span>
+                <div class="modal-content">
+                    <img id="modal-image" src="" alt="Imagen ampliada">
+                </div>
+            </div>
+
             <footer>
             <h2>Lost & Found EAN copy Rigt 2024</h2>
         </footer>
-    </div>    
+    </div>   
+    <script>
+        // Obtener elementos del DOM
+        const modal = document.getElementById("image-modal");
+        const modalImage = document.getElementById("modal-image");
+        const closeModal = document.getElementById("close-modal");
+        const clickableImages = document.querySelectorAll(".clickable-image");
+
+        // Agregar evento de clic a cada imagen
+        clickableImages.forEach(img => {
+            img.addEventListener("click", () => {
+                modal.style.display = "flex"; // Mostrar el modal
+                modalImage.src = img.src; // Asignar la imagen al modal
+            });
+        });
+
+        // Cerrar el modal al hacer clic en la "X"
+        closeModal.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        // Cerrar el modal al hacer clic fuera del contenido
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    </script>
+ 
 </body>
 </html>
 

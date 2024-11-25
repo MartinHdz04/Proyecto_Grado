@@ -46,7 +46,7 @@ if($result->num_rows > 0){
         $referencia = $refs_objetos['referencia_objeto'];
         $valor_objeto = $refs_objetos['valor_objeto'];
         $sql = "SELECT id_objeto, referencia_objeto, estado_reporte, fecha_reporte, nombre_objeto, descripcion_objeto, lugar_encontrado, fotografia_objeto 
-        FROM objetos_reportados WHERE estado_reporte = 'CREADO' and referencia_objeto = '$referencia'";
+        FROM objetos_reportados WHERE estado_reporte = 'ALMACENADO' and referencia_objeto = '$referencia'";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -117,13 +117,15 @@ if($result->num_rows > 0){
                         <article>
                             <?php if ($objects['fotografia'] and intval($objects['valor']) == 1):?>
                                 <img src="data:image/png;base64,<?php echo base64_encode($objects['fotografia']); ?>" alt="Objeto Encontrado">
-                            <?php else: $objects['lugar'] = "Almacenado"?>
+                            <?php else: ?>
                                 <img src="../../static/imgstest/imagen_no_disponible.png" alt="Objeto Encontrado" width="20" height="20">
                             <?php endif; ?>
                             <div class="post-info">
                                 <h2><?php echo strtoupper($objects['Nombre']) . " - " . strtoupper($objects['Referencia']); ?></h2>
+                                <?php if(intval($objects['valor']) != 3): ?>
                                 <p>Fecha del reporte: <?php echo strtoupper($objects['Fecha']) . " | " . strtoupper($objects['lugar']); ?></p>
                                 <p><?php echo strtoupper($objects['descripcion'])?></p>
+                                <?php endif; ?>
                             </div>
                         </article>
                     <?php endforeach; ?>

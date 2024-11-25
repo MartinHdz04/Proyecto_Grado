@@ -133,6 +133,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
             <div class="form-group">
+                <label for="report-time">ID de la petición</label>
+                <input type="text" value="<?php echo htmlspecialchars($row['id_peticion']); ?>" disabled>
+            </div>
+            <div class="form-group">
+                <label for="report-time">Fecha del Reporte*</label>
+                <input type="text" value="<?php echo htmlspecialchars($row['fecha_creacion']); ?>" disabled>
+            </div>
+            <div class="form-group">
                 <label for="report-time">Fecha del Reporte*</label>
                 <input type="text" value="<?php echo htmlspecialchars($row['fecha_creacion']); ?>" disabled>
             </div>

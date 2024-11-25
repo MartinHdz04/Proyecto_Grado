@@ -25,9 +25,13 @@ $filters = [
     'id_peticion' => $_GET['id_peticion'] ?? '',
     'lugar_encontrado' => $_GET['lugar_encontrado'] ?? '',
     'estado_reporte' => $_GET['estado_reporte'] ?? '',
-    'nombre_objeto' => $_GET['nombre_objeto'] ?? ''
+    'nombre_objeto' => $_GET['nombre_objeto'] ?? '',
+    'referencia_objeto'=> $_GET['referencia_objeto'] ?? '',
+    //'vigilante_cedula' => $_GET['vigilante_cedula'] ?? ''
 ];
 
+
+    
 // Construcción de la consulta dinámica
 $query = "SELECT * FROM objetos_reportados WHERE 1=1";
 $params = [];
@@ -111,6 +115,9 @@ if ($stmt = $conn->prepare($query)) {
             border-radius: 5px;
             font-size: 16px;
         }
+        .form-group {
+        margin-bottom: 15px;
+        }
 
         .filter-form button {
             background-color: #569644;
@@ -145,6 +152,24 @@ if ($stmt = $conn->prepare($query)) {
                     font-size: 14px;
                 }
             }
+
+            .resultados div{
+            margin: 5px;
+            padding: 5px;
+            text-align: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+
+            }
+
+            select{
+                padding: 5px;
+                width: 100%;
+                background-color: white;
+                min-height: 40px;
+                border-radius: 5px;
+            }
+
     </style>
 </head>
 <body>
@@ -153,29 +178,76 @@ if ($stmt = $conn->prepare($query)) {
         <section class="profile-sidebar">
             <div class="filter-form">
                 <h1>Buscar Objetos Reportados</h1>
-                <form method="GET" action="obj_rep_admin.php">
+                <form method="GET" action="obj_rep_admin.php" id="formulario">
                     <label>Fecha de Reporte (Inicio):</label>
                     <input type="date" name="fecha_inicio" value="<?= htmlspecialchars($filters['fecha_inicio']) ?>">
 
                     <label>Fecha de Reporte (Fin):</label>
                     <input type="date" name="fecha_fin" value="<?= htmlspecialchars($filters['fecha_fin']) ?>">
 
-                    <label>Vigilante Encargado:</label>
-                    <input type="text" name="vigilante_encargado" value="<?= htmlspecialchars($filters['vigilante_encargado']) ?>">
+                    <label>Referencia Objeto:</label>
+                    <input type="text" name="referencia_objeto" value="<?= htmlspecialchars($filters['referencia_objeto']) ?>">
+
+                    <label for="busqueda">Vigilante Encargado:</label>
+                    <input type="text" placeholder="Buscar..."  name="vigilante_cedula" id="busqueda" autocomplete="off">
+                    <div id="resultados" class="resultados"></div>
+
+                    <input type="hidden" name="vigilante_encargado" id="vigilante_id" value="">
+
+                    <div class="form-group">
+                        <div id="mensaje-error"></div>
+                    </div>
+
 
                     <label>ID de la Petición:</label>
                     <input type="text" name="id_peticion" value="<?= htmlspecialchars($filters['id_peticion']) ?>">
 
                     <label>Lugar Encontrado:</label>
-                    <input type="text" name="lugar_encontrado" value="<?= htmlspecialchars($filters['lugar_encontrado']) ?>">
+                    <div class="form-group">
+                        <select id="lugar_encontrado" name="lugar_encontrado" >
+                            <option value="<?php if($filters['lugar_encontrado']){ echo htmlspecialchars($filters['lugar_encontrado']); } else{ echo ""; }?>" <?php if($filters['estado_reporte']){ echo "" ; } else{ echo "disabled"; } ?> selected><?php if($filters['lugar_encontrado']){ echo htmlspecialchars($filters['lugar_encontrado']); } else{ echo htmlspecialchars("Seleccione un lugar"); }?> </option>
+                            <option value="Plaza de comidas">Plaza de comidas</option>
+                            <option value="Biblioteca">Biblioteca</option>
+                            <option value="L04">L04</option>
+                            <option value="L06">L06</option>
+                            <option value="L01">L01</option>
+                            <option value="L02">L02</option>
+                            <option value="L03">L03</option>
+                            <option value="L05">L05</option>
+                            <option value="L07">L07</option>
+                            <option value="L08">L08</option>
+                            <option value="L09">L09</option>
+                            <option value="L10">L10</option>
+                            <option value="L10">L10</option>
+                            <option value="N01">N01</option>
+                            <option value="N02">N02</option>
+                            <option value="N03">N03</option>
+                            <option value="N04">N04</option>
+                            <option value="N05">N05</option>
+                            <option value="N06">N06</option>
+                            <option value="N07">N07</option>
+                        <!-- Agregar más opciones según sea necesario -->
+                        </select>
+                    </div>
+                
 
                     <label>Estado del Reporte:</label>
-                    <input type="text" name="estado_reporte" value="<?= htmlspecialchars($filters['estado_reporte']) ?>">
+
+                    <div class="form-group">
+                        <select id="estado_reporte" name="estado_reporte" >
+                            <option value="<?php if($filters['estado_reporte']){ echo htmlspecialchars($filters['estado_reporte']); } else{ echo ""; }?>"  <?php if($filters['estado_reporte']){ echo "" ; } else{ echo "disabled"; } ?>  selected><?php if($filters['estado_reporte']){ echo htmlspecialchars($filters['estado_reporte']); } else{ echo "Seleccione un estado"; }?></option>
+                            <option value="CREADO">Reportados por Vigilante</option>
+                            <option value="ALMACENADO">Almacenados por adminitrador</option>
+                            <option value="ENTREGADO">Entregados al usuario</option>
+                        <!-- Agregar más opciones según sea necesario -->
+                        </select>
+                    </div>
 
                     <label>Nombre del Objeto:</label>
                     <input type="text" name="nombre_objeto" value="<?= htmlspecialchars($filters['nombre_objeto']) ?>">
+                    
 
-                    <button type="submit">Buscar</button>
+                    <button type="submit" id="verificar">Buscar</button>
                 </form>
             </div>
         </section>
@@ -189,11 +261,11 @@ if ($stmt = $conn->prepare($query)) {
                             <article>
                                 <img src="data:image/jpeg;base64,<?= base64_encode($row['fotografia_objeto']) ?>" alt="Imagen del Objeto">
                                 <div class="post-info">
-                                    <h2><?= htmlspecialchars($row['nombre_objeto']) ?></h2>
+                                    <h2><?= htmlspecialchars($row['nombre_objeto'] . " | " . $row['referencia_objeto'] ) ?></h2>
                                     <p>Reporte: <?= htmlspecialchars($row['fecha_reporte']) ?> | Lugar: <?= htmlspecialchars($row['lugar_encontrado']) ?></p>
                                     <p>Descripción: <?= htmlspecialchars($row['descripcion_objeto']) ?></p>
                                     <p><strong>Estado:</strong> <?= htmlspecialchars($row['estado_reporte']) ?> - <strong>Vigilante:</strong> <?= htmlspecialchars($row['vigilante_encargado']) ?></p>
-                                    <a href="#">Leer más</a>
+                                    <a href="<?php if($row['estado_reporte'] == "CREADO"){ echo "detalle_reportados.php?id=" . $row['id_objeto'] ; } elseif($row['estado_reporte'] == "ALMACENADO"){ echo "detalle_almacenados.php?id=" . $row['id_objeto'] ; } else{ echo "detalle_entregados.php?id=" . $row['id_objeto'] ; } ?>">Leer más</a>
                                 </div>
                             </article>
                         <?php endforeach; ?>
@@ -209,6 +281,54 @@ if ($stmt = $conn->prepare($query)) {
         </footer>
     </div>    
 </body>
+
+<script>
+
+    // Ejecutar la función al cargar la página
+   // window.onload = setCurrentDateTime;
+
+    
+    // Función para manejar la entrada de texto en el buscador
+    document.getElementById('busqueda').addEventListener('input', function() {
+        let query = this.value;
+
+        console.log(query);
+        // Crear una solicitud AJAX
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', 'buscador.php?query=' + encodeURIComponent(query), true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                document.getElementById('resultados').innerHTML = xhr.responseText;
+                let results = document.querySelectorAll('.result');
+
+                // Recorrer todos los resultados y añadir un listener de clic a cada uno
+                results.forEach(function(result) {
+                    result.addEventListener('click', function() {
+                        // Obtener el valor del div que se hizo clic y pegarlo en el input de id "busqueda"
+                        let valorSeleccionado = result.id;
+                        document.getElementById('busqueda').value = valorSeleccionado;
+
+                        // Obtener el valor del atributo data-id del div que se hizo clic
+                        let id = result.dataset.iduser;
+
+                        // Pegar el valor del data-id en el input hidden con id "estudiante_id"
+                        document.getElementById('vigilante_id').value = id;
+
+                        // Eliminar todos los divs con la clase "result"
+                        let allResults = document.querySelectorAll('.result');
+                        allResults.forEach(function(div) {
+                            div.remove(); // Remueve cada div del DOM
+                        });
+                    });
+                });
+            }
+        };
+        xhr.send();
+    });
+
+
+</script>
+
 </html>
 
 <?php

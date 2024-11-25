@@ -143,7 +143,12 @@ $result = $conn->query($sql);
                         <p><strong>Descripcion:</strong><?php echo strlen($row['comentarios_peticion']) > 50 ? htmlspecialchars(substr($row['comentarios_peticion'], 0, 50)) . '...' : htmlspecialchars($row['comentarios_peticion']); ?></p>
                         <p><strong>Fecha de creación:</strong> <?php echo htmlspecialchars($row['fecha_creacion']); ?></p>
                         <p><strong>Lugar del Encuentro:</strong> <?php echo htmlspecialchars($row['lugar_peticion']); ?></p>
-                        <a href="detalle_objeto.php?id=<?php echo $row['id_peticion']; ?>">Ver más detalles</a>
+                        <p><strong>Id de la petición:</strong> <?php echo htmlspecialchars($row['id_peticion']); ?></p>
+                        <a href="<?php echo strtolower($row['estado_peticion']) == 'abierto' 
+                            ? 'detalle_abierto_est.php?id=' . $row['id_peticion'] 
+                            : 'detalle_cerrado_est.php?id=' . $row['id_peticion']; ?>">
+                            Ver más detalles
+                        </a>
                     </article>
                 <?php endwhile; ?>
             <?php else: ?>

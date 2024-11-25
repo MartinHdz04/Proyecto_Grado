@@ -4,7 +4,7 @@ session_start();
 
 include '../../conexion.php';
 
-if($_SESSION["type_user"] != "2"){
+if($_SESSION["type_user"] != "3"){
   header("location: /Proyecto_Grado/index.php");
 }
 
@@ -23,15 +23,6 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lost & Found</title>
     <link rel="stylesheet" href="../../styles/est_princ.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
-    <script>
-        const socket = io('http://localhost:3000');
-
-        socket.on('notificacion', function(data) {
-            // Aquí puedes mostrar la notificación en la interfaz de usuario
-            alert(data.mensaje + ' a las ' + data.hora + 'en el lugar: '+ data.lugar);
-        });
-    </script>
     <style>
     * {
       box-sizing: border-box;
@@ -110,13 +101,12 @@ $result = $conn->query($sql);
 </head>
 
 <body class="body_reportar">
-    <?php include '../universal/header_vig.php'?>
-
+    <?php include '../universal/header_admin.php'?>
     <div class="form-container">
         <h3><?php echo "ID peticion: $id_peticion"; ?></h3>
         <br>
         <?php if ($result->num_rows > 0): $row = $result->fetch_assoc()?>
-        <form enctype="multipart/form-data" method="POST" onsubmit="return validateForm()" action="carga_vigilantes.php">
+        <form enctype="multipart/form-data" method="POST" onsubmit="return validateForm()" action="carga_admin.php">
             <div class="form-group">
                 <label for="product-image">Fotografía del Producto*</label>
                 <input type="file" id="product-image" name="product-image" accept="image/*">
@@ -127,28 +117,31 @@ $result = $conn->query($sql);
                 <input type="datetime-local" id="report-time" name="report-time" disabled required>
             </div>
 
-            <select id="report-location" name="report-location" required>
-                <option value="<?php echo htmlspecialchars($row['lugar_peticion']);?>" selected><?php echo htmlspecialchars($row['lugar_peticion']); ?></option>
-                <option value="Plaza de comidas">Plaza de comidas</option>
-                <option value="Biblioteca">Biblioteca</option>
-                <option value="L04">L04</option>
-                <option value="L06">L06</option>
-                <option value="L01">L01</option>
-                <option value="L02">L02</option>
-                <option value="L03">L03</option>
-                <option value="L05">L05</option>
-                <option value="L07">L07</option>
-                <option value="L08">L08</option>
-                <option value="L09">L09</option>
-                <option value="L10">L10</option>
-                <option value="N01">N01</option>
-                <option value="N02">N02</option>
-                <option value="N03">N03</option>
-                <option value="N04">N04</option>
-                <option value="N05">N05</option>
-                <option value="N06">N06</option>
-                <option value="N07">N07</option>
-            </select>
+            <div class="form-group">
+              <label for="report-location">Lugar de encuentro:</label>
+              <select id="report-location" name="report-location" required>
+                  <option value="<?php echo htmlspecialchars($row['lugar_peticion']);?>" selected><?php echo htmlspecialchars($row['lugar_peticion']); ?></option>
+                  <option value="Plaza de comidas">Plaza de comidas</option>
+                  <option value="Biblioteca">Biblioteca</option>
+                  <option value="L04">L04</option>
+                  <option value="L06">L06</option>
+                  <option value="L01">L01</option>
+                  <option value="L02">L02</option>
+                  <option value="L03">L03</option>
+                  <option value="L05">L05</option>
+                  <option value="L07">L07</option>
+                  <option value="L08">L08</option>
+                  <option value="L09">L09</option>
+                  <option value="L10">L10</option>
+                  <option value="N01">N01</option>
+                  <option value="N02">N02</option>
+                  <option value="N03">N03</option>
+                  <option value="N04">N04</option>
+                  <option value="N05">N05</option>
+                  <option value="N06">N06</option>
+                  <option value="N07">N07</option>
+              </select>
+            </div>
 
             <div class="form-group">
                 <br>
@@ -179,6 +172,16 @@ $result = $conn->query($sql);
  
             <button type="submit">Enviar Reporte</button>
         </form>
+
+        <br>
+        <!-- Formulario para cancelar reporte -->
+        <form method="POST" action="cancelar_reporte_admin.php">
+            <input type="hidden" name="id_peticion" value="<?php echo htmlspecialchars($row['id_peticion']); ?>">
+            <button type="submit" style="background-color: #f44336; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;">
+                Cancelar Reporte
+            </button>
+        </form>
+
         <?php else: ?>
           <p>Objeto no encontrado</p>
         <?php endif; ?>

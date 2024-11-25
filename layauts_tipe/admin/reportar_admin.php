@@ -142,6 +142,10 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
                 <label for="comment">Comentario Vigilante:</label>
                 <textarea id="comment" name="comment" rows="4" required></textarea>
             </div>
+
+            <div class="form-group">
+                <div id="mensaje-error"></div>
+            </div>
  
             <button type="submit">Enviar Reporte</button>
         </form>
@@ -168,8 +172,8 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
         document.getElementById('report-time').value = formattedDateTime;
     }
 
-    // Ejecutar la función al cargar la página
-    window.onload = setCurrentDateTime;
+    
+
 </script>
 
 </html>
