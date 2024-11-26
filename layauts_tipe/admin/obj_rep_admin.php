@@ -48,7 +48,9 @@ if (!empty($filters['fecha_inicio']) && !empty($filters['fecha_fin'])) {
 
 // Aplicar filtros de búsqueda según los demás valores recibidos
 foreach ($filters as $key => $value) {
+    
     if (!empty($value) && $key !== 'fecha_inicio' && $key !== 'fecha_fin') {
+        
         $query .= " AND $key LIKE ?";
         $params[] = "%$value%";
         $types .= "s"; // Define el tipo de dato como string
@@ -56,6 +58,8 @@ foreach ($filters as $key => $value) {
 }
 
 $query .= " ORDER BY id_objeto DESC"; // Agregar ORDER BY solo después de agregar condiciones
+
+
 
 // Preparar y ejecutar la consulta solo si hay conexión
 if ($stmt = $conn->prepare($query)) {
@@ -67,6 +71,34 @@ if ($stmt = $conn->prepare($query)) {
     $stmt->execute();
     $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
+
+    $arrayCedulas = array();
+
+    if (isset($results) && count($results) > 0){
+
+        foreach ($results as $row){
+            $cedula_vigilante_sql = $row['vigilante_encargado'];
+            $query = "SELECT cedula FROM vigilantes WHERE id_vigilante = $cedula_vigilante_sql";
+            
+            $cedulasResult = $conn->query($query);
+
+            if($cedulasResult->num_rows > 0){
+                $rowCedulas = $cedulasResult->fetch_assoc();
+
+                $id_objeto = $row['id_objeto'];
+                $arrayCedulas[intval($id_objeto)] = $rowCedulas['cedula'];
+
+                
+            }
+
+            
+        }
+        
+    }
+
+   
+
+
 } else {
     die("Error: No se pudo preparar la consulta.");
 }
@@ -205,6 +237,8 @@ if ($stmt = $conn->prepare($query)) {
                     <label>Lugar Encontrado:</label>
                     <div class="form-group">
                         <select id="lugar_encontrado" name="lugar_encontrado" >
+                            
+                            <?Php if($filters['lugar_encontrado']){ echo "<option value=''> Quitar Filtro </option>"; } ?>
                             <option value="<?php if($filters['lugar_encontrado']){ echo htmlspecialchars($filters['lugar_encontrado']); } else{ echo ""; }?>" <?php if($filters['estado_reporte']){ echo "" ; } else{ echo "disabled"; } ?> selected><?php if($filters['lugar_encontrado']){ echo htmlspecialchars($filters['lugar_encontrado']); } else{ echo htmlspecialchars("Seleccione un lugar"); }?> </option>
                             <option value="Plaza de comidas">Plaza de comidas</option>
                             <option value="Biblioteca">Biblioteca</option>
@@ -235,6 +269,7 @@ if ($stmt = $conn->prepare($query)) {
 
                     <div class="form-group">
                         <select id="estado_reporte" name="estado_reporte" >
+                            <?Php if($filters['estado_reporte']){ echo "<option value=''> Quitar Filtro </option>"; } ?>
                             <option value="<?php if($filters['estado_reporte']){ echo htmlspecialchars($filters['estado_reporte']); } else{ echo ""; }?>"  <?php if($filters['estado_reporte']){ echo "" ; } else{ echo "disabled"; } ?>  selected><?php if($filters['estado_reporte']){ echo htmlspecialchars($filters['estado_reporte']); } else{ echo "Seleccione un estado"; }?></option>
                             <option value="CREADO">Reportados por Vigilante</option>
                             <option value="ALMACENADO">Almacenados por adminitrador</option>
@@ -264,7 +299,7 @@ if ($stmt = $conn->prepare($query)) {
                                     <h2><?= htmlspecialchars($row['nombre_objeto'] . " | " . $row['referencia_objeto'] ) ?></h2>
                                     <p>Reporte: <?= htmlspecialchars($row['fecha_reporte']) ?> | Lugar: <?= htmlspecialchars($row['lugar_encontrado']) ?></p>
                                     <p>Descripción: <?= htmlspecialchars($row['descripcion_objeto']) ?></p>
-                                    <p><strong>Estado:</strong> <?= htmlspecialchars($row['estado_reporte']) ?> - <strong>Vigilante:</strong> <?= htmlspecialchars($row['vigilante_encargado']) ?></p>
+                                    <p><strong>Estado:</strong> <?= htmlspecialchars($row['estado_reporte']) ?> - <strong>CC.Vigilante:</strong> <?= htmlspecialchars($arrayCedulas[intval($row['id_objeto'])]) ?></p>
                                     <a href="<?php if($row['estado_reporte'] == "CREADO"){ echo "detalle_reportados.php?id=" . $row['id_objeto'] ; } elseif($row['estado_reporte'] == "ALMACENADO"){ echo "detalle_almacenados.php?id=" . $row['id_objeto'] ; } else{ echo "detalle_entregados.php?id=" . $row['id_objeto'] ; } ?>">Leer más</a>
                                 </div>
                             </article>
@@ -291,7 +326,7 @@ if ($stmt = $conn->prepare($query)) {
     // Función para manejar la entrada de texto en el buscador
     document.getElementById('busqueda').addEventListener('input', function() {
         let query = this.value;
-
+        document.getElementById('vigilante_id').value = "error";
         console.log(query);
         // Crear una solicitud AJAX
         let xhr = new XMLHttpRequest();
