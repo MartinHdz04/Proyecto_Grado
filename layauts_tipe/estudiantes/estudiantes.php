@@ -136,7 +136,7 @@ if($result->num_rows > 0){
         </header>
         <section class="profile-sidebar">
             <?php if ($foto_perfil): ?>
-                <img src="data:image/png;base64,<?php echo base64_encode($foto_perfil); ?>" alt="Profile Picture">
+                <img src="data:image/png;base64,<?php echo base64_encode($foto_perfil); ?>" alt="Profile Picture" class="clickable-image">
             <?php else: ?>
                 <img src="../../static/imgstest/imagen_no_disponible.png" alt="Profile Picture">
             <?php endif; ?>

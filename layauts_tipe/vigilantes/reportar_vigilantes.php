@@ -97,7 +97,7 @@ $apellido = isset($_SESSION['primer_apellido']) ? $_SESSION['primer_apellido'] :
             <div class="form-group">
                 <label for="product-image">Fotografía del Producto*</label>
                 <input type="file" id="product-image" name="product-image" accept="image/*">
-            </div>
+          </div>
 
             <div class="form-group">
                 <label for="report-time">Hora del Reporte</label>

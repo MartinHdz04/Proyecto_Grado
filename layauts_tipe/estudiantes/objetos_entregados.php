@@ -142,7 +142,7 @@ $result = $conn->query($sql);
             <?php if ($result->num_rows > 0):  ?>
                 <?php while ($row = $result->fetch_assoc()):?>
                     <article>
-                        <img src="data:image/jpeg;base64,<?= base64_encode($row['fotografia_entrega']) ?>" alt="Imagen del Objeto">
+                        <img src="data:image/jpeg;base64,<?= base64_encode($row['fotografia_entrega']) ?>" alt="Imagen del Objeto" class="clickable-image">
                         <div class="post-info" style="display: flex; flex-direction: column; justify-content: center;">
                             <h2><?= htmlspecialchars($row['referencia_objeto']) ?></h2>
                             <p><strong>Fecha de entrega:</strong> <?= htmlspecialchars($row['fecha_entrega']) ?></p>
@@ -154,8 +154,35 @@ $result = $conn->query($sql);
             <?php endif; ?>
     </main>
     <footer>
-            <h2>Lost & Found EAN copy Rigt 2024</h2>
-        </footer>
+        <h2>Lost & Found EAN copy Rigt 2024</h2>
+    </footer>
+    <script>
+        // Obtener elementos del DOM
+        const modal = document.getElementById("image-modal");
+        const modalImage = document.getElementById("modal-image");
+        const closeModal = document.getElementById("close-modal");
+        const clickableImages = document.querySelectorAll(".clickable-image");
+
+        // Agregar evento de clic a cada imagen
+        clickableImages.forEach(img => {
+            img.addEventListener("click", () => {
+                modal.style.display = "flex"; // Mostrar el modal
+                modalImage.src = img.src; // Asignar la imagen al modal
+            });
+        });
+
+        // Cerrar el modal al hacer clic en la "X"
+        closeModal.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+
+        // Cerrar el modal al hacer clic fuera del contenido
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    </script>
 </body>
 </html>
 
